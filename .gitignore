@@ -1,0 +1,8 @@
+venv/
+pychache*
+.idea/
+migrations/
+*.db
+*.sqlite3
+__pycache__/
+*.hdf5
