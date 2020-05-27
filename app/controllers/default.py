@@ -4,7 +4,7 @@ from flask import request
 from base64 import b64decode, b64encode
 from app.tf_model.model import unet_256
 from numpy import fromstring, uint8, array, squeeze, float32
-from cv2 import imdecode, resize, IMREAD_UNCHANGED, INTER_CUBIC, imencode
+from cv2 import imdecode, resize, IMREAD_COLOR, INTER_CUBIC, imencode
 
 model = unet_256()
 model.load_weights('./app/tf_model/best_weights_17.hdf5')
@@ -17,7 +17,7 @@ def predict():
         try:
             imgb64 = request.data['arquivo']
             img = fromstring(b64decode(imgb64), uint8)
-            img = imdecode(img, IMREAD_UNCHANGED)
+            img = imdecode(img, IMREAD_COLOR)
             img = resize(img, (625, 352))
             img = img[39:336, ]
             img = resize(img, (256, 256), interpolation=INTER_CUBIC)
@@ -44,7 +44,8 @@ def predict():
                 'predict': pred_b64.decode('utf-8')
             }
         except:
-                return {'message': 'Run-time error' }
+
+            return {'message': 'Run-time error' }
 
 
     return {'url': request.url}
