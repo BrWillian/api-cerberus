@@ -1,5 +1,4 @@
-from app import app, db
-from app.models.models import UploadImage
+from app import app
 from flask import request
 from base64 import b64decode, b64encode
 from app.tf_model.model import unet_256
@@ -34,12 +33,7 @@ def predict():
             pred = pred.tobytes()
             pred_b64 = b64encode(pred)
 
-            new_file = UploadImage(imgb64.encode(), pred_b64)
-            db.session.add(new_file)
-            db.session.commit()
-
             return {
-                'dataDeEnvio' : request.data['dataDeEnvio'],
                 'nomeArquivo' : request.data['nomeArquivo'],
                 'predict': pred_b64.decode('utf-8')
             }
